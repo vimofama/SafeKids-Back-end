@@ -1,5 +1,11 @@
 export enum UserRoles {
-  GUARDIAN = 'Guardian',
+  GUARDIAN = 'Tutor',
   SECURITY_PERSONNEL = 'Personal de seguridad',
   ADMINISTRATOR = 'Administrador',
 }
+
+export const RoleExpiryTimes = {
+  [UserRoles.GUARDIAN]: '1h',
+  [UserRoles.SECURITY_PERSONNEL]: '30m',
+  [UserRoles.ADMINISTRATOR]: '30m',
+};

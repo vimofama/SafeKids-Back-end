@@ -1,5 +1,6 @@
 import {
   Column,
+  Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -7,16 +8,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuthorizedPerson } from '../../authorized-persons/entities/authorized-person.entity';
-import { PickUp } from '../../pick-ups/entities/pick-up.entity';
 import { User } from '../../users/entities/user.entity';
 
+@Entity('student')
 export class Student {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('text', {
-    unique: true,
-  })
   @Column('text', {
     unique: true,
   })
@@ -27,21 +25,13 @@ export class Student {
   })
   ci: string;
 
-  @Column('text', {
-    unique: true,
-  })
-  course: string;
-
   @ManyToOne(() => User, (user) => user.students, { eager: true })
-  user: User;
+  guardian: User;
 
-  @OneToMany(() => PickUp, (pickUp) => pickUp.student)
-  pickUps: PickUp[];
-
-  @ManyToMany(
+  @OneToMany(
     () => AuthorizedPerson,
-    (authorizedPerson) => authorizedPerson.students,
+    (authorizedPerson) => authorizedPerson.student,
+    { eager: true },
   )
-  @JoinTable()
   authorizedPersons: AuthorizedPerson[];
 }

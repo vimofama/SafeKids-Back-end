@@ -5,19 +5,19 @@ import { UsersModule } from './users/users.module';
 import { StudentsModule } from './students/students.module';
 import { PickUpsModule } from './pick-ups/pick-ups.module';
 import { AuthorizedPersonsModule } from './authorized-persons/authorized-persons.module';
-import { LogsModule } from './logs/logs.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ActionLogsModule } from './action-logs/action-logs.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      ssl:
-        process.env.NODE_ENV === 'prod' || process.env.IS_REMOTE_DEV === 'true',
+      ssl: process.env.NODE_ENV === 'prod',
       extra: {
         ssl:
-          process.env.NODE_ENV === 'prod' ||
-          process.env.IS_REMOTE_DEV === 'true'
-            ? { rejectUnathorized: false }
+          process.env.NODE_ENV === 'prod'
+            ? { rejectUnauthorized: false }
             : null,
       },
       type: 'postgres',
@@ -33,7 +33,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     StudentsModule,
     PickUpsModule,
     AuthorizedPersonsModule,
-    LogsModule,
+    ActionLogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

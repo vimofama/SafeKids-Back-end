@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserRoles } from './user-roles.enum';
 import { Student } from '../../students/entities/student.entity';
+import { ActionLog } from 'src/action-logs/entities/action-log.entity';
 
 @Entity('user')
 export class User {
@@ -10,13 +11,12 @@ export class User {
   @Column('text', {
     unique: true,
   })
-  mail: string;
+  email: string;
 
+  @Column('text')
   password: string;
 
-  @Column('text', {
-    unique: true,
-  })
+  @Column('text')
   fullName: string;
 
   @Column('text', {
@@ -32,8 +32,11 @@ export class User {
   @Column('enum', {
     enum: UserRoles,
   })
-  userRol: UserRoles;
+  userRole: UserRoles;
 
-  @OneToMany(() => Student, (student) => student.user)
-  students: Student[];
+  @OneToMany(() => Student, (student) => student.guardian)
+  students?: Student[];
+
+  @OneToMany(() => ActionLog, (actionLog) => actionLog.user)
+  actionLogs: ActionLog[];
 }

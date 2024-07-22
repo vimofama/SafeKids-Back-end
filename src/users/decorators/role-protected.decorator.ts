@@ -1,8 +1,8 @@
 import { SetMetadata } from '@nestjs/common';
-import { ValidRoles } from '../interfaces'; // Es una enumeración no una interfaz
+import { UserRoles } from '../entities/user-roles.enum';
 
 export const META_ROLES = 'roles';
 
-export const RoleProtected = (...args: ValidRoles[]) => {
+export const RoleProtected = (...args: UserRoles[]) => {
   return SetMetadata(META_ROLES, args);
 };

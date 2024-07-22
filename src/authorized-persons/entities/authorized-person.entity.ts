@@ -1,7 +1,14 @@
 import { Student } from '../../students/entities/student.entity';
 import { PickUp } from '../../pick-ups/entities/pick-up.entity';
-import { Column, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
+@Entity('authorized-person')
 export class AuthorizedPerson {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -15,13 +22,14 @@ export class AuthorizedPerson {
     unique: true,
   })
   ci: string;
+
   @Column('text', {
     unique: true,
   })
   phone: string;
 
-  @ManyToMany(() => Student, (student) => student.authorizedPersons)
-  students: Student[];
+  @ManyToOne(() => Student, (student) => student.authorizedPersons)
+  student: Student;
 
   @OneToMany(() => PickUp, (pickUp) => pickUp.authorizedPerson)
   pickUps: PickUp[];

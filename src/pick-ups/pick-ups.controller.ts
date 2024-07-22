@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { PickUpsService } from './pick-ups.service';
 import { CreatePickUpDto } from './dto/create-pick-up.dto';
 import { UpdatePickUpDto } from './dto/update-pick-up.dto';
+import { Auth, GetUser } from 'src/users/decorators';
+import { UserRoles } from 'src/users/entities/user-roles.enum';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('pick-ups')
 export class PickUpsController {
   constructor(private readonly pickUpsService: PickUpsService) {}
 
   @Post()
-  create(@Body() createPickUpDto: CreatePickUpDto) {
-    return this.pickUpsService.create(createPickUpDto);
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  create(@Body() createPickUpDto: CreatePickUpDto, @GetUser() user: User) {
+    return this.pickUpsService.create(createPickUpDto, user);
   }
 
   @Get()
-  findAll() {
-    return this.pickUpsService.findAll();
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  findAll(@GetUser() user: User) {
+    return this.pickUpsService.findAll(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pickUpsService.findOne(+id);
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+    return this.pickUpsService.findOne(id, user);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePickUpDto: UpdatePickUpDto) {
-    return this.pickUpsService.update(+id, updatePickUpDto);
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updatePickUpDto: UpdatePickUpDto,
+    @GetUser() user: User,
+  ) {
+    return this.pickUpsService.update(id, updatePickUpDto, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pickUpsService.remove(+id);
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+    return this.pickUpsService.remove(id, user);
   }
 }

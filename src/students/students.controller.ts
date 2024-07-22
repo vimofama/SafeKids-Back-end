@@ -1,34 +1,64 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { Auth, GetUser } from 'src/users/decorators';
+import { UserRoles } from 'src/users/entities/user-roles.enum';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
-  create(@Body() createStudentDto: CreateStudentDto) {
-    return this.studentsService.create(createStudentDto);
+  @Auth(UserRoles.ADMINISTRATOR)
+  create(@Body() createStudentDto: CreateStudentDto, @GetUser() user: User) {
+    return this.studentsService.create(createStudentDto, user);
   }
 
   @Get()
-  findAll() {
-    return this.studentsService.findAll();
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  findAll(@GetUser() user: User) {
+    return this.studentsService.findAll(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.studentsService.findOne(+id);
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+    return this.studentsService.findOne(id, user);
+  }
+
+  @Get(':id')
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
+  findAllByGuardian(
+    @Param('id', ParseUUIDPipe) id: string,
+    @GetUser() user: User,
+  ) {
+    return this.studentsService.findAllByGuardian(id, user);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentsService.update(+id, updateStudentDto);
+  @Auth(UserRoles.ADMINISTRATOR)
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateStudentDto: UpdateStudentDto,
+    @GetUser() user: User,
+  ) {
+    return this.studentsService.update(id, updateStudentDto, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.studentsService.remove(+id);
+  @Auth(UserRoles.ADMINISTRATOR)
+  remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+    return this.studentsService.remove(id, user);
   }
 }
