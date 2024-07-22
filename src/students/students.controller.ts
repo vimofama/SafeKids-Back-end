@@ -41,7 +41,7 @@ export class StudentsController {
     return this.studentsService.findOne(id, user);
   }
 
-  @Get(':id')
+  @Get('guardian/:id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
   @Csrf()
   findAllByGuardian(

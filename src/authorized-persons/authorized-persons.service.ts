@@ -106,6 +106,21 @@ export class AuthorizedPersonsService {
     return authorizedPerson;
   }
 
+  async findAllByStudent(id: string, user: User) {
+    const student = await this.studentRepository.find({ where: { id } });
+    if (!student) {
+      throw new NotFoundException(`Student not found.`);
+    }
+
+    await this.actionLogsService.create({
+      user: user,
+      timestamp: new Date(),
+      action: `Search all authorized persons by student with id: ${id}.`,
+    });
+
+    return student;
+  }
+
   async update(
     id: string,
     updateAuthorizedPersonDto: UpdateAuthorizedPersonDto,

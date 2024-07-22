@@ -49,7 +49,7 @@ export class AuthorizedPersonsController {
     return this.authorizedPersonsService.findOne(id, user);
   }
 
-  @Get(':id')
+  @Get('guardian/:id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
   @Csrf()
   findAllByGuardian(
@@ -57,6 +57,16 @@ export class AuthorizedPersonsController {
     @GetUser() user: User,
   ) {
     return this.authorizedPersonsService.findAllByGuardian(id, user);
+  }
+
+  @Get('student/:id')
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
+  @Csrf()
+  findAllByStudent(
+    @Param('id', ParseUUIDPipe) id: string,
+    @GetUser() user: User,
+  ) {
+    return this.authorizedPersonsService.findAllByStudent(id, user);
   }
 
   @Patch(':id')
