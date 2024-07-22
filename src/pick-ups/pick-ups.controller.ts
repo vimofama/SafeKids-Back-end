@@ -14,6 +14,7 @@ import { UpdatePickUpDto } from './dto/update-pick-up.dto';
 import { Auth, GetUser } from 'src/users/decorators';
 import { UserRoles } from 'src/users/entities/user-roles.enum';
 import { User } from 'src/users/entities/user.entity';
+import { Csrf } from 'ncsrf';
 
 @Controller('pick-ups')
 export class PickUpsController {
@@ -21,24 +22,28 @@ export class PickUpsController {
 
   @Post()
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Csrf()
   create(@Body() createPickUpDto: CreatePickUpDto, @GetUser() user: User) {
     return this.pickUpsService.create(createPickUpDto, user);
   }
 
   @Get()
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Csrf()
   findAll(@GetUser() user: User) {
     return this.pickUpsService.findAll(user);
   }
 
   @Get(':id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Csrf()
   findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
     return this.pickUpsService.findOne(id, user);
   }
 
   @Patch(':id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Csrf()
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePickUpDto: UpdatePickUpDto,
@@ -49,6 +54,7 @@ export class PickUpsController {
 
   @Delete(':id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Csrf()
   remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
     return this.pickUpsService.remove(id, user);
   }

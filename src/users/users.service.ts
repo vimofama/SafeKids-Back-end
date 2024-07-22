@@ -46,7 +46,7 @@ export class UsersService {
 
       return {
         ...user,
-        token: this.getJwtToken({ id: user.id }, user.userRole),
+        jwt: this.getJwtToken({ id: user.id }, user.userRole),
       };
     } catch (error) {
       this.handleDBExceptions(error);
@@ -81,7 +81,7 @@ export class UsersService {
       timestamp: new Date(),
       action: `User with id: ${user.id} logged in.`,
     });
-    return { ...user, token: this.getJwtToken({ id: user.id }, user.userRole) };
+    return { ...user, jwt: this.getJwtToken({ id: user.id }, user.userRole) };
   }
 
   async findAll(user: User) {
@@ -104,7 +104,7 @@ export class UsersService {
   checkAuthStatus(user: User) {
     return {
       ...user,
-      token: this.getJwtToken({ id: user.id }, user.userRole),
+      jwt: this.getJwtToken({ id: user.id }, user.userRole),
     };
   }
 }

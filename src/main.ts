@@ -2,24 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as csurf from 'csurf';
+import { nestCsrf, CsrfFilter } from 'ncsrf';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Apply CSRF protection middleware
   app.use(cookieParser());
+  app.use(nestCsrf());
 
-  // Configurar middleware CSRF
-  app.use(
-    csurf({
-      cookie: {
-        httpOnly: true,
-        sameSite: 'strict',
-      },
-    }),
-  );
+  app.useGlobalFilters(new CsrfFilter());
 
   app.useGlobalPipes(
     new ValidationPipe({

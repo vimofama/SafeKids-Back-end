@@ -24,4 +24,12 @@ export class UsersController {
   findAll(@GetUser() user: User) {
     return this.usersService.findAll(user);
   }
+
+  @Get('/token-csrf')
+  @Auth()
+  getCsrfToken(@Req() req) {
+    return {
+      csrfToken: req.csrfToken(),
+    };
+  }
 }

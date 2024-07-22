@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ActionLogsService } from './action-logs.service';
 import { Auth, GetUser } from 'src/users/decorators';
-import { User } from 'src/users/entities/user.entity';
+import { Csrf } from 'ncsrf';
 
 @Controller('action-logs')
 export class ActionLogsController {
@@ -9,6 +9,7 @@ export class ActionLogsController {
 
   @Get()
   @Auth()
+  @Csrf()
   findAll() {
     return this.actionLogsService.findAll();
   }
