@@ -8,4 +8,7 @@ export class CreatePickUpDto {
 
   @IsUUID()
   authorizedPersonId: string;
+
+  @IsUUID()
+  studentId: string;
 }

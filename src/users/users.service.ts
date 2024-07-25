@@ -14,6 +14,7 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import * as userRolesEnum from './entities/user-roles.enum';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
 import { RoleExpiryTimes, UserRoles } from './entities/user-roles.enum';
+import * as jwt from 'jsonwebtoken'; // Add this line to import the 'jsonwebtoken' module
 
 @Injectable()
 export class UsersService {
@@ -101,7 +102,7 @@ export class UsersService {
     throw new InternalServerErrorException('Unexpected error.');
   }
 
-  checkAuthStatus(user: User) {
+  async checkAuthStatus(user: User) {
     return {
       ...user,
       jwt: this.getJwtToken({ id: user.id }, user.userRole),

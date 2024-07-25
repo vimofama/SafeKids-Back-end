@@ -1,4 +1,4 @@
-import { IsString, IsUUID, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class CreateStudentDto {
   @IsString()
@@ -8,6 +8,10 @@ export class CreateStudentDto {
   @IsString()
   @MinLength(10)
   ci: string;
+
+  @IsString()
+  @IsOptional()
+  imageURL?: string;
 
   @IsUUID()
   guardianId: string;

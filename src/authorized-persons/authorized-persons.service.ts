@@ -21,8 +21,8 @@ export class AuthorizedPersonsService {
   constructor(
     @InjectRepository(AuthorizedPerson)
     private readonly authorizedPersonRepository: Repository<AuthorizedPerson>,
-    @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly actionLogsService: ActionLogsService,
   ) {}
 
@@ -30,18 +30,18 @@ export class AuthorizedPersonsService {
     createAuthorizedPersonDto: CreateAuthorizedPersonDto,
     user: User,
   ) {
-    const { studentId, ...authorizedPersonData } = createAuthorizedPersonDto;
+    const { guardianId, ...authorizedPersonData } = createAuthorizedPersonDto;
 
-    const student = await this.studentRepository.findOne({
-      where: { id: studentId },
+    const guardian = await this.userRepository.findOne({
+      where: { id: guardianId },
     });
-    if (!student) {
-      throw new BadRequestException(`Student not found.`);
+    if (!guardian) {
+      throw new BadRequestException(`Guardian not found.`);
     }
     try {
       const authorizedPerson = this.authorizedPersonRepository.create({
         ...authorizedPersonData,
-        student,
+        guardian,
       });
 
       const savedAuthorizedPerson =
@@ -90,8 +90,7 @@ export class AuthorizedPersonsService {
 
   async findAllByGuardian(id: string, user: User) {
     const authorizedPerson = await this.authorizedPersonRepository.find({
-      where: { student: { guardian: { id } } },
-      relations: ['students'],
+      where: { guardian: { id } },
     });
     if (!authorizedPerson) {
       throw new NotFoundException(`Authorized person not found.`);
@@ -104,21 +103,6 @@ export class AuthorizedPersonsService {
     });
 
     return authorizedPerson;
-  }
-
-  async findAllByStudent(id: string, user: User) {
-    const student = await this.studentRepository.find({ where: { id } });
-    if (!student) {
-      throw new NotFoundException(`Student not found.`);
-    }
-
-    await this.actionLogsService.create({
-      user: user,
-      timestamp: new Date(),
-      action: `Search all authorized persons by student with id: ${id}.`,
-    });
-
-    return student;
   }
 
   async update(

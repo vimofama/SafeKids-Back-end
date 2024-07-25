@@ -1,4 +1,4 @@
-import { IsString, IsUUID, MinLength } from 'class-validator';
+import { IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class CreateAuthorizedPersonDto {
   @IsString()
@@ -13,6 +13,10 @@ export class CreateAuthorizedPersonDto {
   @MinLength(10)
   phone: string;
 
+  @IsString()
+  @IsOptional()
+  imageURL?: string;
+
   @IsUUID()
-  studentId: string;
+  guardianId: string;
 }

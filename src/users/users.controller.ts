@@ -32,4 +32,10 @@ export class UsersController {
       csrfToken: req.csrfToken(),
     };
   }
+
+  @Post('check-auth-status')
+  @Auth()
+  checkAuthStatus(@GetUser() user: User) {
+    return this.usersService.checkAuthStatus(user);
+  }
 }

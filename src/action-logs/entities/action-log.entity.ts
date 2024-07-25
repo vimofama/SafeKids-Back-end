@@ -1,5 +1,11 @@
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('action-log')
 export class ActionLog {
@@ -7,6 +13,7 @@ export class ActionLog {
   id: string;
 
   @ManyToOne(() => User, (user) => user.actionLogs)
+  @JoinColumn()
   user?: User;
 
   @Column({ type: 'timestamp' })

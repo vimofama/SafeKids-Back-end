@@ -34,6 +34,13 @@ export class PickUpsController {
     return this.pickUpsService.findAll(user);
   }
 
+  @Get('get-today-pick-ups')
+  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Csrf()
+  getTodayPickUps(@GetUser() user: User) {
+    return this.pickUpsService.getTodaysPickUps(user);
+  }
+
   @Get(':id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
   @Csrf()

@@ -59,16 +59,6 @@ export class AuthorizedPersonsController {
     return this.authorizedPersonsService.findAllByGuardian(id, user);
   }
 
-  @Get('student/:id')
-  @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
-  @Csrf()
-  findAllByStudent(
-    @Param('id', ParseUUIDPipe) id: string,
-    @GetUser() user: User,
-  ) {
-    return this.authorizedPersonsService.findAllByStudent(id, user);
-  }
-
   @Patch(':id')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
   @Csrf()

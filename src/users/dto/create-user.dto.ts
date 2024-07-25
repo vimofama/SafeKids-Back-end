@@ -1,4 +1,11 @@
-import { IsEmail, IsEnum, IsString, Matches, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
+} from 'class-validator';
 import { UserRoles } from '../entities/user-roles.enum';
 
 export class CreateUserDto {
@@ -28,4 +35,8 @@ export class CreateUserDto {
 
   @IsEnum(UserRoles)
   userRole: UserRoles;
+
+  @IsString()
+  @IsOptional()
+  imageURL?: string;
 }

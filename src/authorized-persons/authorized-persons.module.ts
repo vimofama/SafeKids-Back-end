@@ -14,7 +14,6 @@ import { ActionLogsModule } from 'src/action-logs/action-logs.module';
   imports: [
     TypeOrmModule.forFeature([AuthorizedPerson]),
     UsersModule,
-    StudentsModule,
     ActionLogsModule,
   ],
 })
