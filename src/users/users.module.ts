@@ -8,6 +8,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ActionLogsModule } from 'src/action-logs/action-logs.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FirebaseAdminModule } from 'src/firebase-admin/firebase-admin.module';
 
 @Module({
   controllers: [UsersController],
@@ -29,6 +30,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
     }),
     ActionLogsModule,
+    FirebaseAdminModule,
   ],
   exports: [
     TypeOrmModule,

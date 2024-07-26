@@ -4,8 +4,8 @@ import { AuthorizedPersonsController } from './authorized-persons.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorizedPerson } from './entities/authorized-person.entity';
 import { UsersModule } from 'src/users/users.module';
-import { StudentsModule } from 'src/students/students.module';
 import { ActionLogsModule } from 'src/action-logs/action-logs.module';
+import { FirebaseAdminModule } from 'src/firebase-admin/firebase-admin.module';
 
 @Module({
   controllers: [AuthorizedPersonsController],
@@ -15,6 +15,7 @@ import { ActionLogsModule } from 'src/action-logs/action-logs.module';
     TypeOrmModule.forFeature([AuthorizedPerson]),
     UsersModule,
     ActionLogsModule,
+    FirebaseAdminModule,
   ],
 })
 export class AuthorizedPersonsModule {}

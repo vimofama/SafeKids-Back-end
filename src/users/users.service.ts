@@ -12,10 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { JwtPayLoad } from './interfaces/jwt-payload.interface';
 import { CreateUserDto, LoginUserDto } from './dto';
-import * as userRolesEnum from './entities/user-roles.enum';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
 import { RoleExpiryTimes, UserRoles } from './entities/user-roles.enum';
-import * as jwt from 'jsonwebtoken'; // Add this line to import the 'jsonwebtoken' module
 import { validate as isUUID } from 'uuid';
 
 @Injectable()
@@ -111,19 +109,31 @@ export class UsersService {
     };
   }
 
-  async findById(term: string) {
-    let user: User;
+  async findById(term: string, user: User) {
+    let userSearched: User;
 
     if (isUUID(term)) {
-      user = await this.userRepository.findOne({ where: {id: term}, relations: ['students'] });
+      userSearched = await this.userRepository.findOne({
+        where: { id: term },
+        relations: ['students'],
+      });
     } else {
-      user = await this.userRepository.findOne({ where: {ci: term}, relations: ['students'] });
+      userSearched = await this.userRepository.findOne({
+        where: { ci: term },
+        relations: ['students'],
+      });
     }
 
-    if (!user) {
+    if (!userSearched) {
       throw new NotFoundException('User not found.');
     }
 
-    return user;
+    await this.actionLogsService.create({
+      user: user,
+      timestamp: new Date(),
+      action: `Search of user with id: ${userSearched.id}`,
+    });
+
+    return userSearched;
   }
 }
