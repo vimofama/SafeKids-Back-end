@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,6 +16,7 @@ import * as userRolesEnum from './entities/user-roles.enum';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
 import { RoleExpiryTimes, UserRoles } from './entities/user-roles.enum';
 import * as jwt from 'jsonwebtoken'; // Add this line to import the 'jsonwebtoken' module
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -107,5 +109,21 @@ export class UsersService {
       ...user,
       jwt: this.getJwtToken({ id: user.id }, user.userRole),
     };
+  }
+
+  async findById(term: string) {
+    let user: User;
+
+    if (isUUID(term)) {
+      user = await this.userRepository.findOne({ where: {id: term}, relations: ['students'] });
+    } else {
+      user = await this.userRepository.findOne({ where: {ci: term}, relations: ['students'] });
+    }
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return user;
   }
 }

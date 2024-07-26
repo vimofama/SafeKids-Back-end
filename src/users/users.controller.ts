@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Req,
+  Res,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { Auth, GetUser } from './decorators';
@@ -37,5 +46,11 @@ export class UsersController {
   @Auth()
   checkAuthStatus(@GetUser() user: User) {
     return this.usersService.checkAuthStatus(user);
+  }
+
+  @Get(':term')
+  @Auth()
+  findOne(@Param('term') term: string) {
+    return this.usersService.findById(term);
   }
 }
