@@ -34,6 +34,7 @@
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
+    "firebase-admin": "^12.3.0",
     "ncsrf": "^1.1.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.12.0",

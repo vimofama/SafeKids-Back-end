@@ -8,6 +8,7 @@ import { AuthorizedPersonsModule } from './authorized-persons/authorized-persons
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ActionLogsModule } from './action-logs/action-logs.module';
 import { ConfigModule } from '@nestjs/config';
+import { FirebaseAdminModule } from './firebase-admin/firebase-admin.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ConfigModule } from '@nestjs/config';
     PickUpsModule,
     AuthorizedPersonsModule,
     ActionLogsModule,
+    FirebaseAdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

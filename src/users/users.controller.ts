@@ -50,7 +50,7 @@ export class UsersController {
 
   @Get(':term')
   @Auth()
-  findOne(@Param('term') term: string) {
-    return this.usersService.findById(term);
+  findOne(@Param('term') term: string, @GetUser() user: User) {
+    return this.usersService.findById(term, user);
   }
 }
