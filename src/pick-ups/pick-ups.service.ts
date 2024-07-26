@@ -46,7 +46,7 @@ export class PickUpsService {
       throw new BadRequestException(`Student person not found.`);
     }
 
-    if (student.guardian !== authorizedPerson.guardian) {
+    if (student.guardian.id !== authorizedPerson.guardian.id) {
       throw new BadRequestException(
         `The student and authorized person must have the same guardian.`,
       );
@@ -57,7 +57,7 @@ export class PickUpsService {
     const endOfToday = new Date();
     endOfToday.setHours(23, 59, 59, 999);
 
-    let existingPickUp = await this.pickUpRepository.findOne({
+    const existingPickUp = await this.pickUpRepository.findOne({
       where: {
         student,
         timestamp: Between(startOfToday, endOfToday),
@@ -80,6 +80,7 @@ export class PickUpsService {
           ...pickUpData,
           authorizedPerson,
           student,
+          isPickedUp: true,
         });
 
         const savedPickUp = await this.pickUpRepository.save(pickUp);
