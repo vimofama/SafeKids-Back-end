@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
 import { UserRoles } from '../users/entities/user-roles.enum';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class StudentsService {
@@ -69,8 +70,19 @@ export class StudentsService {
     return await this.studentRepository.find();
   }
 
-  async findOne(id: string, user: User) {
-    const student = await this.studentRepository.findOneBy({ id });
+  async findOne(term: string, user: User) {
+    let student: Student;
+
+    if (isUUID(term)) {
+      student = await this.studentRepository.findOne({
+        where: { id: term },
+      });
+    } else {
+      student = await this.studentRepository.findOne({
+        where: { ci: term },
+      });
+    }
+
     if (!student) {
       throw new NotFoundException(`Student not found.`);
     }
@@ -78,7 +90,7 @@ export class StudentsService {
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
-      action: `Search student with id ${id}.`,
+      action: `Search student with id ${student.id}.`,
     });
 
     return student;

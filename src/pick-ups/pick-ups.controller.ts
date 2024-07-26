@@ -28,7 +28,7 @@ export class PickUpsController {
   }
 
   @Get()
-  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
+  @Auth()
   @Csrf()
   findAll(@GetUser() user: User) {
     return this.pickUpsService.findAll(user);

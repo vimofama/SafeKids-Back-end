@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { Student } from 'src/students/entities/student.entity';
 import { User } from 'src/users/entities/user.entity';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class AuthorizedPersonsService {
@@ -70,11 +71,19 @@ export class AuthorizedPersonsService {
     });
   }
 
-  async findOne(id: string, user: User) {
-    const authorizedPerson = await this.authorizedPersonRepository.findOne({
-      where: { id },
-      relations: ['students'],
-    });
+  async findOne(term: string, user: User) {
+    let authorizedPerson: AuthorizedPerson;
+
+    if (isUUID(term)) {
+      authorizedPerson = await this.authorizedPersonRepository.findOne({
+        where: { id: term },
+      });
+    } else {
+      authorizedPerson = await this.authorizedPersonRepository.findOne({
+        where: { ci: term },
+      });
+    }
+
     if (!authorizedPerson) {
       throw new NotFoundException(`Authorized person not found.`);
     }
@@ -82,7 +91,7 @@ export class AuthorizedPersonsService {
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
-      action: `Search authorized person with id ${id}.`,
+      action: `Search authorized person with id ${term}.`,
     });
 
     return authorizedPerson;

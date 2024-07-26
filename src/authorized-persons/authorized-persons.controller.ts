@@ -42,11 +42,11 @@ export class AuthorizedPersonsController {
     return this.authorizedPersonsService.findAll(user);
   }
 
-  @Get(':id')
+  @Get(':term')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
   @Csrf()
-  findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
-    return this.authorizedPersonsService.findOne(id, user);
+  findOne(@Param('term') term: string, @GetUser() user: User) {
+    return this.authorizedPersonsService.findOne(term, user);
   }
 
   @Get('guardian/:id')
