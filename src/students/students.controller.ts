@@ -34,10 +34,10 @@ export class StudentsController {
     return this.studentsService.findAll(user);
   }
 
-  @Get(':id')
+  @Get(':term')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
   @Csrf()
-  findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+  findOne(@Param('term') id: string, @GetUser() user: User) {
     return this.studentsService.findOne(id, user);
   }
 
