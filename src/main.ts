@@ -24,7 +24,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: 'https://safekids-frontend.onrender.com',
+    origin: 'localhost:3000',
     credentials: true,
   });
   const port = process.env.PORT || 3005;
