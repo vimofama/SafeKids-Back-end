@@ -35,13 +35,6 @@ export class AuthorizedPersonsController {
     );
   }
 
-  @Get()
-  @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
-  @Csrf()
-  findAll(@GetUser() user: User) {
-    return this.authorizedPersonsService.findAll(user);
-  }
-
   @Get(':term')
   @Auth(UserRoles.ADMINISTRATOR, UserRoles.SECURITY_PERSONNEL)
   @Csrf()
@@ -57,27 +50,5 @@ export class AuthorizedPersonsController {
     @GetUser() user: User,
   ) {
     return this.authorizedPersonsService.findAllByGuardian(id, user);
-  }
-
-  @Patch(':id')
-  @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
-  @Csrf()
-  update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateAuthorizedPersonDto: UpdateAuthorizedPersonDto,
-    @GetUser() user: User,
-  ) {
-    return this.authorizedPersonsService.update(
-      id,
-      updateAuthorizedPersonDto,
-      user,
-    );
-  }
-
-  @Delete(':id')
-  @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
-  @Csrf()
-  remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
-    return this.authorizedPersonsService.remove(id, user);
   }
 }

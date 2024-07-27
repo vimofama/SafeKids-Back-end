@@ -41,16 +41,6 @@ export class StudentsController {
     return this.studentsService.findOne(id, user);
   }
 
-  @Get('guardian/:id')
-  @Auth(UserRoles.ADMINISTRATOR, UserRoles.GUARDIAN)
-  @Csrf()
-  findAllByGuardian(
-    @Param('id', ParseUUIDPipe) id: string,
-    @GetUser() user: User,
-  ) {
-    return this.studentsService.findAllByGuardian(id, user);
-  }
-
   @Patch(':id')
   @Auth(UserRoles.ADMINISTRATOR)
   @Csrf()
@@ -60,12 +50,5 @@ export class StudentsController {
     @GetUser() user: User,
   ) {
     return this.studentsService.update(id, updateStudentDto, user);
-  }
-
-  @Delete(':id')
-  @Auth(UserRoles.ADMINISTRATOR)
-  @Csrf()
-  remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
-    return this.studentsService.remove(id, user);
   }
 }

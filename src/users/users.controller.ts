@@ -13,12 +13,15 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import { Auth, GetUser } from './decorators';
 import { UserRoles } from './entities/user-roles.enum';
 import { User } from './entities/user.entity';
+import { Csrf } from 'ncsrf';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
+  @Auth(UserRoles.ADMINISTRATOR)
+  @Csrf()
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
@@ -40,12 +43,6 @@ export class UsersController {
     return {
       csrfToken: req.csrfToken(),
     };
-  }
-
-  @Post('check-auth-status')
-  @Auth()
-  checkAuthStatus(@GetUser() user: User) {
-    return this.usersService.checkAuthStatus(user);
   }
 
   @Get(':term')

@@ -183,7 +183,7 @@ export class PickUpsService {
 
       const newPickUps = students.map((student) => {
         const pickUp = this.pickUpRepository.create({
-          timestamp: null,
+          timestamp: new Date(),
           authorizedPerson: null,
           student,
           isPickedUp: false,
