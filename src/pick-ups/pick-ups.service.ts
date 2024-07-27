@@ -3,12 +3,10 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
 } from '@nestjs/common';
 import { CreatePickUpDto } from './dto/create-pick-up.dto';
-import { UpdatePickUpDto } from './dto/update-pick-up.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { PickUp } from './entities/pick-up.entity';
 import { AuthorizedPerson } from 'src/authorized-persons/entities/authorized-person.entity';
 import { User } from 'src/users/entities/user.entity';

@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { PickUpsService } from './pick-ups.service';
 import { CreatePickUpDto } from './dto/create-pick-up.dto';
 import { Auth, GetUser } from 'src/users/decorators';

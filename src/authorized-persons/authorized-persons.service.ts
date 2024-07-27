@@ -6,11 +6,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAuthorizedPersonDto } from './dto/create-authorized-person.dto';
-import { UpdateAuthorizedPersonDto } from './dto/update-authorized-person.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorizedPerson } from './entities/authorized-person.entity';
 import { Repository } from 'typeorm';
-import { Student } from 'src/students/entities/student.entity';
 import { User } from 'src/users/entities/user.entity';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
 import { validate as isUUID } from 'uuid';

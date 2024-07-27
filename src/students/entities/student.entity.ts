@@ -6,7 +6,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AuthorizedPerson } from '../../authorized-persons/entities/authorized-person.entity';
 import { User } from '../../users/entities/user.entity';
 import { PickUp } from 'src/pick-ups/entities/pick-up.entity';
 import { FirebaseAdminModule } from 'src/firebase-admin/firebase-admin.module';
