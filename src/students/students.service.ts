@@ -96,25 +96,7 @@ export class StudentsService {
     return student;
   }
 
-  async findAllByGuardian(id: string, user: User) {
-    const students = await this.studentRepository.find({
-      where: { guardian: { id } },
-    });
-    if (!students) {
-      throw new NotFoundException(`Students not found.`);
-    }
-
-    await this.actionLogsService.create({
-      user: user,
-      timestamp: new Date(),
-      action: `Search all students by guardian with id: ${id}.`,
-    });
-
-    return students;
-  }
-
   async update(id: string, updateStudentDto: UpdateStudentDto, user: User) {
-    
     const student = await this.studentRepository.preload({
       id,
       ...updateStudentDto,
@@ -132,21 +114,6 @@ export class StudentsService {
       });
 
       return student;
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
-  }
-
-  async remove(id: string, user: User) {
-    const student = await this.findOne(id, user);
-    try {
-      await this.studentRepository.remove(student);
-
-      await this.actionLogsService.create({
-        user: user,
-        timestamp: new Date(),
-        action: `Delete student with id: ${id}.`,
-      });
     } catch (error) {
       this.handleDBExceptions(error);
     }

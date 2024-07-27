@@ -109,62 +109,6 @@ export class PickUpsService {
     });
   }
 
-  async findOne(id: string, user: User) {
-    const pickUp = await this.pickUpRepository.findOne({
-      where: { id },
-      relations: ['authorizedPerson', 'student'],
-    });
-    if (!pickUp) {
-      throw new NotFoundException(`Pick up not found.`);
-    }
-
-    await this.actionLogsService.create({
-      user: user,
-      timestamp: new Date(),
-      action: `Search pick up with id: ${id}.`,
-    });
-
-    return pickUp;
-  }
-
-  async update(id: string, updatePickUpDto: UpdatePickUpDto, user: User) {
-    const pickUp = await this.pickUpRepository.preload({
-      id,
-      ...updatePickUpDto,
-    });
-
-    if (!pickUp) throw new NotFoundException(`Pick up not found.`);
-
-    try {
-      await this.pickUpRepository.save(pickUp);
-
-      await this.actionLogsService.create({
-        user: user,
-        timestamp: new Date(),
-        action: `Update pick up with id: ${id}.`,
-      });
-
-      return pickUp;
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
-  }
-
-  async remove(id: string, user: User) {
-    const pickUp = await this.findOne(id, user);
-    try {
-      await this.pickUpRepository.remove(pickUp);
-
-      await this.actionLogsService.create({
-        user: user,
-        timestamp: new Date(),
-        action: `Delete pick up with id: ${id}.`,
-      });
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
-  }
-
   async getTodaysPickUps(user: User) {
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
