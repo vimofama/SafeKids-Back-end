@@ -13,6 +13,9 @@ admin.initializeApp({
   storageBucket: 'gs://safekids-70b8b.appspot.com',
 });
 
+/**
+ * Firebase Admin Module
+ */
 @Module({})
 export class FirebaseAdminModule {
   public static admin = admin;

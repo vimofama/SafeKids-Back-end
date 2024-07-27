@@ -45,6 +45,7 @@ export class AuthorizedPersonsService {
 
       const savedAuthorizedPerson =
         await this.authorizedPersonRepository.save(authorizedPerson);
+      // Register action log
       await this.actionLogsService.create({
         user: user,
         timestamp: new Date(),
@@ -74,6 +75,7 @@ export class AuthorizedPersonsService {
       throw new NotFoundException(`Authorized person not found.`);
     }
 
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
@@ -91,6 +93,7 @@ export class AuthorizedPersonsService {
       throw new NotFoundException(`Authorized person not found.`);
     }
 
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),

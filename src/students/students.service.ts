@@ -48,6 +48,7 @@ export class StudentsService {
 
       const savedStudent = await this.studentRepository.save(student);
 
+      // Register action log
       await this.actionLogsService.create({
         user: user,
         timestamp: new Date(),
@@ -61,6 +62,7 @@ export class StudentsService {
   }
 
   async findAll(user: User) {
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
@@ -87,6 +89,7 @@ export class StudentsService {
       throw new NotFoundException(`Student not found.`);
     }
 
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
@@ -107,6 +110,7 @@ export class StudentsService {
     try {
       await this.studentRepository.save(student);
 
+      // Register action log
       await this.actionLogsService.create({
         user: user,
         timestamp: new Date(),

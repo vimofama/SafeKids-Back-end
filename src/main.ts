@@ -7,9 +7,9 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Add CSRF protection
   app.use(cookieParser());
   app.use(nestCsrf());
-
   app.useGlobalFilters(new CsrfFilter());
 
   app.useGlobalPipes(
@@ -23,6 +23,7 @@ async function bootstrap() {
     }),
   );
 
+  // Enable CORS to allow requests from the frontend
   app.enableCors({
     origin: 'http://localhost:5173/',
     credentials: true,

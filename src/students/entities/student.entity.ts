@@ -36,12 +36,16 @@ export class Student {
   @OneToMany(() => PickUp, (pickUp) => pickUp.student)
   pickUps: PickUp[];
 
+  /**
+   * Load image URL from Firebase Storage
+   */
   @AfterLoad()
   async loadImageURL() {
     if (this.imageURL) {
       const bucket = FirebaseAdminModule.admin.storage().bucket();
       const file = bucket.file(this.imageURL);
 
+      // Set expiration time to 1 hour
       const expiresAt = new Date();
       expiresAt.setHours(expiresAt.getHours() + 1);
 

@@ -38,6 +38,7 @@ export class UsersService {
 
       await this.userRepository.save(user);
 
+      // Register action log
       await this.actionLogsService.create({
         timestamp: new Date(),
         action: `User created with id: ${user.id}.`,
@@ -54,12 +55,23 @@ export class UsersService {
     }
   }
 
+  /**
+   * Generates a JWT token with the given payload and user role
+   * @param payload Payload to be signed
+   * @param userRole User role to get the token expiry time
+   * @returns JWT token
+   */
   private getJwtToken(payload: JwtPayLoad, userRole: UserRoles) {
     const expiresIn = this.getTokenExpiryTime(userRole);
     const token = this.jwtService.sign(payload, { expiresIn });
     return token;
   }
 
+  /**
+   * Gets the token expiry time for the given role
+   * @param role Role to get the token expiry time
+   * @returns Token expiry time
+   */
   private getTokenExpiryTime(role: UserRoles): string {
     return RoleExpiryTimes[role] || '1h';
   }
@@ -70,6 +82,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
+      // Register action log
       await this.actionLogsService.create({
         timestamp: new Date(),
         action: `User with email: ${email} tried to log in.`,
@@ -78,6 +91,7 @@ export class UsersService {
       throw new UnauthorizedException('Credentals are not valid.');
     }
 
+    // Register action log
     await this.actionLogsService.create({
       timestamp: new Date(),
       action: `User with id: ${user.id} logged in.`,
@@ -88,6 +102,7 @@ export class UsersService {
   async findAll(user: User) {
     const users = await this.userRepository.find({ relations: ['students'] });
 
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
@@ -121,6 +136,7 @@ export class UsersService {
       throw new NotFoundException('User not found.');
     }
 
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),

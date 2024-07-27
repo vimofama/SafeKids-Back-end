@@ -68,6 +68,8 @@ export class PickUpsService {
         existingPickUp.authorizedPerson = authorizedPerson;
         existingPickUp.timestamp = pickUpData.timestamp;
         await this.pickUpRepository.save(existingPickUp);
+
+        // Register action log
         await this.actionLogsService.create({
           user: user,
           timestamp: new Date(),
@@ -83,6 +85,8 @@ export class PickUpsService {
         });
 
         const savedPickUp = await this.pickUpRepository.save(pickUp);
+
+        // Register action log
         await this.actionLogsService.create({
           user: user,
           timestamp: new Date(),
@@ -97,6 +101,7 @@ export class PickUpsService {
   }
 
   async findAll(user: User) {
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
@@ -137,6 +142,7 @@ export class PickUpsService {
       todaysPickUps = await this.pickUpRepository.save(newPickUps);
     }
 
+    // Register action log
     await this.actionLogsService.create({
       user: user,
       timestamp: new Date(),
