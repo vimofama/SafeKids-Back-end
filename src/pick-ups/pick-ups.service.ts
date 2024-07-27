@@ -66,6 +66,7 @@ export class PickUpsService {
       if (existingPickUp) {
         existingPickUp.isPickedUp = true;
         existingPickUp.authorizedPerson = authorizedPerson;
+        existingPickUp.timestamp = pickUpData.timestamp;
         await this.pickUpRepository.save(existingPickUp);
         await this.actionLogsService.create({
           user: user,
