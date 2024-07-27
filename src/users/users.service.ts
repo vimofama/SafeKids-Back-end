@@ -102,13 +102,6 @@ export class UsersService {
     throw new InternalServerErrorException('Unexpected error.');
   }
 
-  async checkAuthStatus(user: User) {
-    return {
-      ...user,
-      jwt: this.getJwtToken({ id: user.id }, user.userRole),
-    };
-  }
-
   async findById(term: string, user: User) {
     let userSearched: User;
 

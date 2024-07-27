@@ -3,14 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { AuthorizedPersonsService } from './authorized-persons.service';
 import { CreateAuthorizedPersonDto } from './dto/create-authorized-person.dto';
-import { UpdateAuthorizedPersonDto } from './dto/update-authorized-person.dto';
 import { Auth, GetUser } from 'src/users/decorators';
 import { UserRoles } from 'src/users/entities/user-roles.enum';
 import { User } from 'src/users/entities/user.entity';

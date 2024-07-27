@@ -6,11 +6,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateAuthorizedPersonDto } from './dto/create-authorized-person.dto';
-import { UpdateAuthorizedPersonDto } from './dto/update-authorized-person.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorizedPerson } from './entities/authorized-person.entity';
 import { Repository } from 'typeorm';
-import { Student } from 'src/students/entities/student.entity';
 import { User } from 'src/users/entities/user.entity';
 import { ActionLogsService } from 'src/action-logs/action-logs.service';
 import { validate as isUUID } from 'uuid';
@@ -59,18 +57,6 @@ export class AuthorizedPersonsService {
     }
   }
 
-  async findAll(user: User) {
-    await this.actionLogsService.create({
-      user: user,
-      timestamp: new Date(),
-      action: 'Search all authorized persons.',
-    });
-
-    return await this.authorizedPersonRepository.find({
-      relations: ['students'],
-    });
-  }
-
   async findOne(term: string, user: User) {
     let authorizedPerson: AuthorizedPerson;
 
@@ -112,49 +98,6 @@ export class AuthorizedPersonsService {
     });
 
     return authorizedPerson;
-  }
-
-  async update(
-    id: string,
-    updateAuthorizedPersonDto: UpdateAuthorizedPersonDto,
-    user: User,
-  ) {
-    const authorizedPerson = await this.authorizedPersonRepository.preload({
-      id,
-      ...updateAuthorizedPersonDto,
-    });
-
-    if (!authorizedPerson)
-      throw new NotFoundException(`Authorized person not found.`);
-
-    try {
-      await this.authorizedPersonRepository.save(authorizedPerson);
-
-      await this.actionLogsService.create({
-        user: user,
-        timestamp: new Date(),
-        action: `Update authorized person with id: ${id}.`,
-      });
-
-      return authorizedPerson;
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
-  }
-
-  async remove(id: string, user: User) {
-    const authorizedPerson = await this.findOne(id, user);
-    try {
-      await this.authorizedPersonRepository.remove(authorizedPerson);
-
-      await this.actionLogsService.create({
-        user: user,
-        timestamp: new Date(),
-        action: `Delete authorized person with id: ${id}.`,
-      });
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
   }
 
   private handleDBExceptions(error: any) {

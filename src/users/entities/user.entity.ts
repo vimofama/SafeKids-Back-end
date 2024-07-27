@@ -2,9 +2,7 @@ import {
   AfterLoad,
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserRoles } from './user-roles.enum';
