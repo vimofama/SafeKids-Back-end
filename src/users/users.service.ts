@@ -1,4 +1,5 @@
 import {
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -93,6 +94,7 @@ export class UsersService {
 
     // Register action log
     await this.actionLogsService.create({
+      userId: user.id,
       timestamp: new Date(),
       action: `User with id: ${user.id} logged in.`,
     });
@@ -104,7 +106,7 @@ export class UsersService {
 
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: 'Search of all users.',
     });
@@ -133,12 +135,18 @@ export class UsersService {
     }
 
     if (!userSearched) {
+      // Register action log
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.NOT_FOUND} Error. User with id: ${term} not found.`,
+      });
       throw new NotFoundException('User not found.');
     }
 
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: `Search of user with id: ${userSearched.id}`,
     });

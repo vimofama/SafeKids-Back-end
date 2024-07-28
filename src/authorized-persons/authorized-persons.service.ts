@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -35,6 +36,11 @@ export class AuthorizedPersonsService {
       where: { id: guardianId },
     });
     if (!guardian) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.BAD_REQUEST} Error. Guardian not found when trying to create authorized person.`,
+      });
       throw new BadRequestException(`Guardian not found.`);
     }
     try {
@@ -47,7 +53,7 @@ export class AuthorizedPersonsService {
         await this.authorizedPersonRepository.save(authorizedPerson);
       // Register action log
       await this.actionLogsService.create({
-        user: user,
+        userId: user.id,
         timestamp: new Date(),
         action: `Create Authorized Person with id: ${savedAuthorizedPerson.id}.`,
       });
@@ -72,12 +78,17 @@ export class AuthorizedPersonsService {
     }
 
     if (!authorizedPerson) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.NOT_FOUND} Error. Authorized person with id: ${term} not found.`,
+      });
       throw new NotFoundException(`Authorized person not found.`);
     }
 
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: `Search authorized person with id ${term}.`,
     });
@@ -86,21 +97,26 @@ export class AuthorizedPersonsService {
   }
 
   async findAllByGuardian(id: string, user: User) {
-    const authorizedPerson = await this.authorizedPersonRepository.find({
+    const authorizedPersons = await this.authorizedPersonRepository.find({
       where: { guardian: { id } },
     });
-    if (!authorizedPerson) {
-      throw new NotFoundException(`Authorized person not found.`);
+    if (!authorizedPersons) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.NOT_FOUND} Error. Authorized persons not found when trying to search by guardian with id: ${id}.`,
+      });
+      throw new NotFoundException(`Authorized persons not found.`);
     }
 
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: `Search all authorized persons by guardian with id: ${id}.`,
     });
 
-    return authorizedPerson;
+    return authorizedPersons;
   }
 
   private handleDBExceptions(error: any) {

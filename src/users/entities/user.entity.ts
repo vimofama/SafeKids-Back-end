@@ -56,9 +56,6 @@ export class User {
   )
   authorizedPersons: AuthorizedPerson[];
 
-  @OneToMany(() => ActionLog, (actionLog) => actionLog.user)
-  actionLogs: ActionLog[];
-
   /**
    * Load image URL from Firebase Storage
    */

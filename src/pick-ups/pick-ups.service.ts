@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -34,6 +35,11 @@ export class PickUpsService {
       where: { id: authorizedPersonId },
     });
     if (!authorizedPerson) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.BAD_REQUEST} Error. Authorized person not found when trying to create pick up.`,
+      });
       throw new BadRequestException(`Authorized person not found.`);
     }
 
@@ -41,10 +47,20 @@ export class PickUpsService {
       where: { id: studentId },
     });
     if (!student) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.BAD_REQUEST} Error. Student not found when trying to create pick up.`,
+      });
       throw new BadRequestException(`Student person not found.`);
     }
 
     if (student.guardian.id !== authorizedPerson.guardian.id) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.BAD_REQUEST} Error. The student and authorized person must have the same guardian.`,
+      });
       throw new BadRequestException(
         `The student and authorized person must have the same guardian.`,
       );
@@ -71,7 +87,7 @@ export class PickUpsService {
 
         // Register action log
         await this.actionLogsService.create({
-          user: user,
+          userId: user.id,
           timestamp: new Date(),
           action: `Updated Pick Up with id: ${existingPickUp.id} to isPickedUp: true and set authorizedPerson to ${authorizedPerson.id}.`,
         });
@@ -88,7 +104,7 @@ export class PickUpsService {
 
         // Register action log
         await this.actionLogsService.create({
-          user: user,
+          userId: user.id,
           timestamp: new Date(),
           action: `Created Pick Up with id: ${savedPickUp.id}.`,
         });
@@ -103,7 +119,7 @@ export class PickUpsService {
   async findAll(user: User) {
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: 'Search all pick ups.',
     });
@@ -144,7 +160,7 @@ export class PickUpsService {
 
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: "Retrieve and/or create today's pick-ups.",
     });

@@ -12,3 +12,15 @@ services:
     container_name: safekids
     volumes:
       - ./postgres:/var/lib/postgresql/data
+  
+  logs-db:
+    image: postgres:14.11
+    restart: always
+    ports:
+      - "5401:5432"
+    environment:
+      POSTGRES_PASSWORD: ${LOGS_DB_PASSWORD}
+      POSTGRES_DB: ${LOGS_DB_NAME}
+    container_name: safekids_logs
+    volumes:
+      - ./postgres-logs:/var/lib/postgresql/data

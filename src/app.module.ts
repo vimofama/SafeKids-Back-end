@@ -30,6 +30,24 @@ import { FirebaseAdminModule } from './firebase-admin/firebase-admin.module';
       autoLoadEntities: true,
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
     }),
+    TypeOrmModule.forRoot({
+      ssl: process.env.NODE_ENV === 'prod',
+      extra: {
+        ssl:
+          process.env.NODE_ENV === 'prod'
+            ? { rejectUnauthorized: false }
+            : null,
+      },
+      name: 'logsConnection',
+      type: 'postgres',
+      host: process.env.LOGS_DB_HOST,
+      port: +process.env.LOGS_DB_PORT,
+      database: process.env.LOGS_DB_NAME,
+      username: process.env.LOGS_DB_USERNAME,
+      password: process.env.LOGS_DB_PASSWORD,
+      autoLoadEntities: true,
+      synchronize: process.env.LOGS_DB_SYNCHRONIZE === 'true',
+    }),
     UsersModule,
     StudentsModule,
     PickUpsModule,

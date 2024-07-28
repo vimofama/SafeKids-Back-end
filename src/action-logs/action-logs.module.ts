@@ -10,7 +10,7 @@ import { UsersModule } from 'src/users/users.module';
   providers: [ActionLogsService],
   exports: [ActionLogsService],
   imports: [
-    TypeOrmModule.forFeature([ActionLog]),
+    TypeOrmModule.forFeature([ActionLog], 'logsConnection'),
     forwardRef(() => UsersModule),
   ],
 })

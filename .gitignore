@@ -1,5 +1,6 @@
 # Database
 /postgres
+/postgres-logs
 
 # compiled output
 /dist

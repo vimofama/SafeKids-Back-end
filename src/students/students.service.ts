@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -34,10 +35,21 @@ export class StudentsService {
       where: { id: guardianId },
     });
     if (!guardian) {
+      // Register action log
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.BAD_REQUEST} Error. Guardian not found when trying to create student.`,
+      });
       throw new BadRequestException(`Guardian not found.`);
     }
 
     if (guardian.userRole !== UserRoles.GUARDIAN) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.BAD_REQUEST} Error. User is not a guardian when trying to create student.`,
+      });
       throw new BadRequestException(`User is not a guardian.`);
     }
     try {
@@ -50,7 +62,7 @@ export class StudentsService {
 
       // Register action log
       await this.actionLogsService.create({
-        user: user,
+        userId: user.id,
         timestamp: new Date(),
         action: `Create Student with id: ${savedStudent.id}.`,
       });
@@ -64,7 +76,7 @@ export class StudentsService {
   async findAll(user: User) {
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: 'Search all students.',
     });
@@ -86,12 +98,17 @@ export class StudentsService {
     }
 
     if (!student) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.NOT_FOUND} Error. Student with id: ${term} not found.`,
+      });
       throw new NotFoundException(`Student not found.`);
     }
 
     // Register action log
     await this.actionLogsService.create({
-      user: user,
+      userId: user.id,
       timestamp: new Date(),
       action: `Search student with id ${student.id}.`,
     });
@@ -105,14 +122,21 @@ export class StudentsService {
       ...updateStudentDto,
     });
 
-    if (!student) throw new NotFoundException(`Student not found.`);
+    if (!student) {
+      await this.actionLogsService.create({
+        userId: user.id,
+        timestamp: new Date(),
+        action: `${HttpStatus.NOT_FOUND} Error. Student with id: ${id} not found when trying to update.`,
+      });
+      throw new NotFoundException(`Student not found.`);
+    }
 
     try {
       await this.studentRepository.save(student);
 
       // Register action log
       await this.actionLogsService.create({
-        user: user,
+        userId: user.id,
         timestamp: new Date(),
         action: `Update student with id: ${id}.`,
       });

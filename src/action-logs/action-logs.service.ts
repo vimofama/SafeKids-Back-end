@@ -7,14 +7,13 @@ import { CreateActionLogDto } from './dto/create-action-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ActionLog } from './entities/action-log.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ActionLogsService {
   private readonly logger = new Logger('ActionLogsService');
 
   constructor(
-    @InjectRepository(ActionLog)
+    @InjectRepository(ActionLog, 'logsConnection')
     private readonly actionLogRepository: Repository<ActionLog>,
   ) {}
 
@@ -29,7 +28,7 @@ export class ActionLogsService {
   }
 
   async findAll() {
-    return await this.actionLogRepository.find({ relations: ['user'] });
+    return await this.actionLogRepository.find();
   }
 
   private handleDBExceptions(error: any) {
